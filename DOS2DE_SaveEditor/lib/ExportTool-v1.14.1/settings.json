@@ -1,0 +1,36 @@
+{
+  "GR2": {
+    "InputPath": "",
+    "OutputPath": "",
+    "BatchInputPath": "",
+    "BatchOutputPath": "",
+    "BatchInputFormat": 0,
+    "BatchOutputFormat": 1,
+    "ConformPath": null
+  },
+  "PAK": {
+    "ExtractInputPath": "",
+    "ExtractOutputPath": "",
+    "CreateInputPath": "C:\\Users\\K8\\Documents\\Larian Studios\\Divinity Original Sin 2 Definitive Edition\\PlayerProfiles\\Fracture\\Savegames\\Story\\QuickSave_0\\QuickSave_0",
+    "CreateOutputPath": "C:\\Users\\K8\\Documents\\Larian Studios\\Divinity Original Sin 2 Definitive Edition\\PlayerProfiles\\Fracture\\Savegames\\Story\\QuickSave_0\\QuickSave_0.lsv",
+    "CreatePackageVersion": 0,
+    "CreatePackageCompression": 2
+  },
+  "Resources": {
+    "InputPath": "C:\\Users\\K8\\Documents\\Larian Studios\\Divinity Original Sin 2 Definitive Edition\\PlayerProfiles\\Fracture\\Savegames\\Story\\QuickSave_0\\QuickSave_0\\SaveArchive\\globals.lsx",
+    "OutputPath": "C:\\Users\\K8\\Documents\\Larian Studios\\Divinity Original Sin 2 Definitive Edition\\PlayerProfiles\\Fracture\\Savegames\\Story\\QuickSave_0\\QuickSave_0\\SaveArchive\\globals.lsf",
+    "BatchInputPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Divinity Original Sin 2\\DefEd\\Data\\Public\\Shared\\Content\\Elves_Female\\Hero\\[PAK]_Upperbody",
+    "BatchOutputPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Divinity Original Sin 2\\DefEd\\Data\\Public\\Shared\\Content\\Elves_Female\\Hero\\[PAK]_Upperbody",
+    "BatchInputFormat": 0,
+    "BatchOutputFormat": 2
+  },
+  "Story": {
+    "InputPath": "",
+    "OutputPath": ""
+  },
+  "Debugging": {
+    "SavePath": "C:\\Users\\K8\\Documents\\Larian Studios\\Divinity Original Sin 2 Definitive Edition\\PlayerProfiles\\Fracture\\Savegames\\Story\\QuickSave_0\\QuickSave_0.lsv"
+  },
+  "SelectedGame": 3,
+  "Version": "1.14.1"
+}
