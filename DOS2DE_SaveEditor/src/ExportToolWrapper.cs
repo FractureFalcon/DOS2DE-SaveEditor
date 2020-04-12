@@ -14,16 +14,6 @@ namespace DOS2DE_SaveEditor.src
         private const string exportTool = "ExportTool-v1.14.1\\divine.exe";
         private readonly string _workspaceFolder;
 
-        // [TODO]: Abstract the wrapper one more level
-        // ExportToolWrapper should 
-        // 1) Know where the tool is
-        // 2) Know the different commands
-        // 3) Invoke the command line (which should be its own module...)
-
-        // There should be a class, SaveGame, which takes a file, 
-        // unloads it, allows edits,
-        // then saves it out
-
         public ExportToolWrapper()
         {
             InitializeWorkspace(Application.LocalUserAppDataPath);
