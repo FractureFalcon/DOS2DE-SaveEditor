@@ -19,7 +19,6 @@ namespace DOS2DE_SaveEditor.src
             SaveGame test = exportToolWrapper.OpenSaveGameLSV(testSave);
             exportToolWrapper.CloseSaveGame(test);
 
-            // IDK C# Visual shit?
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
