@@ -47,25 +47,17 @@ namespace DOS2DE_SaveEditor.Source.Main
             string outputFolder = Path.Combine(WorkspaceFolder, filename);
 
             Console.WriteLine($"[INFO] Extracting {fullFileName} to {outputFolder}...");
-            string args = $"-s \"{fullFileName}\" -a extract-package -d \"{outputFolder}\"";
+            string exportToolArgs = $"-s \"{fullFileName}\" -a extract-package -d \"{outputFolder}\"";
 
-            string commandLineArgs = $".\\{ExportTool} {args}";
-            Console.WriteLine($"[DEBUG] Using args {commandLineArgs}");
+            string exportToolCommand = $".\\{ExportTool} {exportToolArgs}";
+            Console.WriteLine($"[DEBUG] Using args {exportToolCommand}");
 
-            Process cmd = new Process();
-            cmd.StartInfo.FileName = "cmd.exe";
-            cmd.StartInfo.RedirectStandardInput = true;
-            cmd.StartInfo.RedirectStandardOutput = true;
-            cmd.StartInfo.CreateNoWindow = true;
-            cmd.StartInfo.UseShellExecute = false;
-            cmd.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
-            cmd.Start();
+            ExecuteCommandArgs commandArgs = new ExecuteCommandArgs
+            {
+                Commands = new List<string> {exportToolCommand}
+            };
 
-            //cmd.StandardInput.WriteLine("cd");
-            cmd.StandardInput.WriteLine(commandLineArgs);
-            cmd.StandardInput.Flush();
-            cmd.StandardInput.Close();
-            cmd.WaitForExit(10 * 60 * 1000);
+            Process cmd = ProcessWrapper.ExecuteCommand(commandArgs);
             Console.WriteLine($"[DEBUG] Console output:\n{cmd.StandardOutput.ReadToEnd()}");
 
             return new SaveGame(outputFolder, Path.GetFileNameWithoutExtension(outputFolder));
@@ -95,25 +87,17 @@ namespace DOS2DE_SaveEditor.Source.Main
             }
 
             Console.WriteLine($"[INFO] Compressing {saveFolder} to {outputFilePath}...");
-            string args = $"-s \"{saveFolder}\" -a create-package -d \"{outputFilePath}\"";
+            string exportToolArgs = $"-s \"{saveFolder}\" -a create-package -d \"{outputFilePath}\"";
 
-            string commandLineArgs = $".\\{ExportTool} {args}";
-            Console.WriteLine($"[DEBUG] Using args {commandLineArgs}");
+            string exportToolCommand = $".\\{ExportTool} {exportToolArgs}";
+            Console.WriteLine($"[DEBUG] Using args {exportToolCommand}");
 
-            Process cmd = new Process();
-            cmd.StartInfo.FileName = "cmd.exe";
-            cmd.StartInfo.RedirectStandardInput = true;
-            cmd.StartInfo.RedirectStandardOutput = true;
-            cmd.StartInfo.CreateNoWindow = true;
-            cmd.StartInfo.UseShellExecute = false;
-            cmd.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
-            cmd.Start();
+            ExecuteCommandArgs commandArgs = new ExecuteCommandArgs
+            {
+                Commands = new List<string> { exportToolCommand }
+            };
 
-            //cmd.StandardInput.WriteLine("cd");
-            cmd.StandardInput.WriteLine(commandLineArgs);
-            cmd.StandardInput.Flush();
-            cmd.StandardInput.Close();
-            cmd.WaitForExit();
+            Process cmd = ProcessWrapper.ExecuteCommand(commandArgs);
             Console.WriteLine($"[DEBUG] Console output:\n{cmd.StandardOutput.ReadToEnd()}");
         }
     }

@@ -74,6 +74,7 @@
     <Compile Include="Source\Main\Program.cs" />
     <Compile Include="Source\Main\SaveGame.cs" />
     <Compile Include="Source\Utils\FileUtils.cs" />
+    <Compile Include="Source\Utils\ProcessWrapper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
