@@ -15,6 +15,9 @@ namespace DOS2DE_SaveEditor.Source.Main
         private const string ExportTool = "ExportTool-v1.14.1\\divine.exe";
         private static string WorkspaceFolder => Application.LocalUserAppDataPath;
 
+        private const string GlobalsCompressedFile = "globals.lsf";
+        private const string GlobalsDecompressedFile = "globals.lsx";
+
         public static void InitializeWorkspace(string workspaceFolder)
         {
             workspaceFolder = FileUtils.UseDefaultPathIfNotRooted(workspaceFolder);
@@ -47,14 +50,19 @@ namespace DOS2DE_SaveEditor.Source.Main
             string outputFolder = Path.Combine(WorkspaceFolder, filename);
 
             Console.WriteLine($"[INFO] Extracting {fullFileName} to {outputFolder}...");
-            string exportToolArgs = $"-s \"{fullFileName}\" -a extract-package -d \"{outputFolder}\"";
+            string exportToolExtractSaveArgs = $"-s \"{fullFileName}\" -d \"{outputFolder}\" -a extract-package";
+            string exportToolDecompressContentsArgs = $"-s \"{outputFolder}\" -d \"{outputFolder}\" -a convert-resources -i lsf -o lsx";
 
-            string exportToolCommand = $".\\{ExportTool} {exportToolArgs}";
-            Console.WriteLine($"[DEBUG] Using args {exportToolCommand}");
+            string exportToolExtractSaveCommand = $".\\{ExportTool} {exportToolExtractSaveArgs}";
+            string exportToolDecompressContentsCommand = $".\\{ExportTool} {exportToolDecompressContentsArgs}";
+            Console.WriteLine($"[DEBUG] Using args {exportToolExtractSaveCommand}");
 
             ExecuteCommandArgs commandArgs = new ExecuteCommandArgs
             {
-                Commands = new List<string> {exportToolCommand}
+                Commands = new List<string> {
+                    exportToolExtractSaveCommand, 
+                    exportToolDecompressContentsCommand
+                }
             };
 
             Process cmd = ProcessWrapper.ExecuteCommand(commandArgs);
@@ -87,14 +95,22 @@ namespace DOS2DE_SaveEditor.Source.Main
             }
 
             Console.WriteLine($"[INFO] Compressing {saveFolder} to {outputFilePath}...");
-            string exportToolArgs = $"-s \"{saveFolder}\" -a create-package -d \"{outputFilePath}\"";
+            string exportToolCompressContentsArgs = $"-s \"{saveFolder}\" -d \"{saveFolder}\" -a convert-resources -i lsx -o lsf";
+            string exportToolCreateSaveLsvArgs = $"-s \"{saveFolder}\" -a create-package -d \"{outputFilePath}\"";
 
-            string exportToolCommand = $".\\{ExportTool} {exportToolArgs}";
-            Console.WriteLine($"[DEBUG] Using args {exportToolCommand}");
+            string exportToolCompressContentsCommand = $".\\{ExportTool} {exportToolCompressContentsArgs}";
+            string saveFolderGlob = Path.Combine(saveFolder, "*.lsx");
+            string wipeLsxFilesCommand = $"del /s /q {saveFolderGlob}";
+            string exportToolCreateSaveLsvCommand = $".\\{ExportTool} {exportToolCreateSaveLsvArgs}";
+            Console.WriteLine($"[DEBUG] Using args {exportToolCompressContentsCommand}");
 
             ExecuteCommandArgs commandArgs = new ExecuteCommandArgs
             {
-                Commands = new List<string> { exportToolCommand }
+                Commands = new List<string> { 
+                    exportToolCompressContentsCommand,
+                    wipeLsxFilesCommand,
+                    exportToolCreateSaveLsvCommand
+                }
             };
 
             Process cmd = ProcessWrapper.ExecuteCommand(commandArgs);

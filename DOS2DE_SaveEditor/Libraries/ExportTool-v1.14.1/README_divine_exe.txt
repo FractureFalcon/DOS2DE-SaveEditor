@@ -1,9 +1,14 @@
 Usage:
+    divine.exe [opts...] -s SOURCE -a ACTION
+
+Options:
+    -a, --action... Set action to execute (See: Actions)
+
+    -s, --source... Set source file path or directory
+
     -l, --loglevel[optional]... Set verbosity level of log output
 
     -g, --game[optional]... Set target game when generating output
-
-    -s, --source... Set source file path or directory
 
     -d, --destination[optional]... Set destination file path or directory
 
@@ -12,8 +17,6 @@ Usage:
     -i, --input-format[optional]... Set input format for batch operations
 
     -o, --output-format[optional]... Set output format for batch operations
-
-    -a, --action... Set action to execute (See: Actions)
 
     -p, --package-version[optional]... Set package version
 
@@ -30,18 +33,29 @@ Usage:
     --use-regex[optional]... Use Regular Expressions for expression type
 
 Actions:
-"batchActions":
-    "extract-packages",
-    "convert-models",
-    "convert-resources"
+    "batchActions":
+        "extract-packages",
+        "convert-models",
+        "convert-resources" // Requires -i and -o
+        "convert-resource"
 
-"graphicsActions":
-    "convert-model",
-    "convert-models"
+    "graphicsActions":
+        "convert-model",
+        "convert-models"
 
-"packageActions":
-    "create-package",
-    "list-package",
-    "extract-single-file",
-    "extract-package",
-    "extract-packages"
+    "packageActions":
+        "create-package",
+        "list-package",
+        "extract-single-file",
+        "extract-package",
+        "extract-packages"
+
+Formats:
+    "dae"
+    "gr2"
+    "pak"
+    "lsb"
+    "lsf"
+    "lsj"
+    "lsv"
+    "lsx"
