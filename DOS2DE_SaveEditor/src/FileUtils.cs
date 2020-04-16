@@ -11,6 +11,11 @@ namespace DOS2DE_SaveEditor.src
     {
         public static bool IsLsv(string path)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return false;
+            }
+
             try
             {
                 string extension = Path.GetExtension(path);
@@ -29,11 +34,18 @@ namespace DOS2DE_SaveEditor.src
             }
         }
 
-        public static string GetFullPathIfPathRooted(string path)
+        public static string UseDefaultPathIfNotRooted(string path, string defaultPathIfNotRooted = "")
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return defaultPathIfNotRooted;
+            }
+
+            path = path.Replace("\"", string.Empty);
+
             if (!Path.IsPathRooted(path))
             {
-                return Path.GetFullPath(path);
+                return Path.Combine(defaultPathIfNotRooted, path);
             }
 
             return path;

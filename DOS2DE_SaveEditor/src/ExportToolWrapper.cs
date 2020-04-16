@@ -11,24 +11,12 @@ namespace DOS2DE_SaveEditor.src
 {
     public class ExportToolWrapper
     {
-        private const string exportTool = "ExportTool-v1.14.1\\divine.exe";
-        private readonly string _workspaceFolder;
+        private const string ExportTool = "ExportTool-v1.14.1\\divine.exe";
+        private static string WorkspaceFolder => Application.LocalUserAppDataPath;
 
-        public ExportToolWrapper()
+        public static void InitializeWorkspace(string workspaceFolder)
         {
-            InitializeWorkspace(Application.LocalUserAppDataPath);
-            _workspaceFolder = Application.LocalUserAppDataPath;
-        }
-
-        public ExportToolWrapper(string workspaceFolder)
-        {
-            InitializeWorkspace(workspaceFolder);
-            _workspaceFolder = workspaceFolder;
-        }
-
-        private void InitializeWorkspace(string workspaceFolder)
-        {
-            workspaceFolder = FileUtils.GetFullPathIfPathRooted(workspaceFolder);
+            workspaceFolder = FileUtils.UseDefaultPathIfNotRooted(workspaceFolder);
 
             if (Directory.Exists(workspaceFolder))
             {
@@ -38,23 +26,29 @@ namespace DOS2DE_SaveEditor.src
             Directory.CreateDirectory(workspaceFolder);
         }
 
-        public SaveGame OpenSaveGameLSV(string fullFileName)
+        public static SaveGame OpenSaveGameLSV(string fullFileName)
         {
-            fullFileName = FileUtils.GetFullPathIfPathRooted(fullFileName);
+            fullFileName = FileUtils.UseDefaultPathIfNotRooted(fullFileName);
 
-            if (!File.Exists(fullFileName))
+            if (!Path.IsPathRooted(fullFileName) && !File.Exists(fullFileName))
             {
                 Console.WriteLine($"[ERROR] Save game LSV could not be found, input parameter was: \"{fullFileName}\"");
                 return new SaveGame();
             }
 
+            if (!FileUtils.IsLsv(fullFileName))
+            {
+                Console.WriteLine($"[ERROR] Inputted save game was not an LSV, it was: \"{fullFileName}\"");
+                return new SaveGame();
+            }
+
             string filename = Path.GetFileNameWithoutExtension(fullFileName);
-            string outputFolder = Path.Combine(_workspaceFolder, filename);
+            string outputFolder = Path.Combine(WorkspaceFolder, filename);
 
             Console.WriteLine($"[INFO] Extracting {fullFileName} to {outputFolder}...");
             string args = $"-s \"{fullFileName}\" -a extract-package -d \"{outputFolder}\"";
 
-            string commandLineArgs = $".\\{exportTool} {args}";
+            string commandLineArgs = $".\\{ExportTool} {args}";
             Console.WriteLine($"[DEBUG] Using args {commandLineArgs}");
 
             Process cmd = new Process();
@@ -73,16 +67,15 @@ namespace DOS2DE_SaveEditor.src
             cmd.WaitForExit(10 * 60 * 1000);
             Console.WriteLine($"[DEBUG] Console output:\n{cmd.StandardOutput.ReadToEnd()}");
 
-            return new SaveGame(outputFolder);
+            return new SaveGame(outputFolder, Path.GetFileNameWithoutExtension(outputFolder));
         }
 
-        public void CloseSaveGame(SaveGame saveGame)
+        public static void CloseSaveGame(SaveGame saveGame)
         {
-            CloseSaveGame(saveGame, _workspaceFolder);
+            CloseSaveGame(saveGame, WorkspaceFolder);
         }
 
-
-        public void CloseSaveGame(SaveGame saveGame, string outputLocation)
+        public static void CloseSaveGame(SaveGame saveGame, string outputLocation)
         {
             string saveFolder = saveGame.WorkspaceFolderLocation;
 
@@ -92,7 +85,7 @@ namespace DOS2DE_SaveEditor.src
                 return;
             }
 
-            string outputFilePath = FileUtils.GetFullPathIfPathRooted(outputLocation);
+            string outputFilePath = FileUtils.UseDefaultPathIfNotRooted(outputLocation, WorkspaceFolder);
 
             if (!FileUtils.IsLsv(outputLocation))
             {
@@ -103,7 +96,7 @@ namespace DOS2DE_SaveEditor.src
             Console.WriteLine($"[INFO] Compressing {saveFolder} to {outputFilePath}...");
             string args = $"-s \"{saveFolder}\" -a create-package -d \"{outputFilePath}\"";
 
-            string commandLineArgs = $".\\{exportTool} {args}";
+            string commandLineArgs = $".\\{ExportTool} {args}";
             Console.WriteLine($"[DEBUG] Using args {commandLineArgs}");
 
             Process cmd = new Process();

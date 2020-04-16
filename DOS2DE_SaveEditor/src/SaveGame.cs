@@ -10,10 +10,12 @@ namespace DOS2DE_SaveEditor.src
     public struct SaveGame
     {
         public string WorkspaceFolderLocation;
+        public string SaveName;
 
-        public SaveGame(string workspaceFolderLocation)
+        public SaveGame(string workspaceFolderLocation, string saveName)
         {
             WorkspaceFolderLocation = workspaceFolderLocation;
+            SaveName = saveName;
         }
     }
 }
