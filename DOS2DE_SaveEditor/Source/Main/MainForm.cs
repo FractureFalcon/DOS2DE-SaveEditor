@@ -1,4 +1,4 @@
-﻿using DOS2DE_SaveEditor.src;
+﻿using DOS2DE_SaveEditor.Source.Main;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,35 +11,14 @@ using System.Windows.Forms;
 
 namespace DOS2DE_SaveEditor
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public static void RunNullSaveTest()
+        public FormBindings _formBindings;
+
+        public MainForm(FormBindings formBindings)
         {
-            const string testSave = "C:\\Users\\K8\\Documents\\Larian Studios\\Divinity Original Sin 2 Definitive Edition\\PlayerProfiles\\Fracture\\Savegames\\Story\\Autosave_8_Testing\\Autosave_8_Testing.lsv";
+            _formBindings = formBindings;
 
-            RunSaveTest(testSave);
-        }
-
-        public static void RunSaveTest(string pathToSave, string pathToExport = "")
-        {
-            var exportToolWrapper = new ExportToolWrapper();
-            SaveGame test = ExportToolWrapper.OpenSaveGameLSV(pathToSave);
-
-            if (string.IsNullOrWhiteSpace(test.WorkspaceFolderLocation))
-            {
-                return;
-            }
-
-            ExportToolWrapper.CloseSaveGame(test, pathToExport);
-        }
-
-        public static SaveGame ImportFile(string pathToSaveLsv)
-        {
-            return ExportToolWrapper.OpenSaveGameLSV(pathToSaveLsv);
-        }
-
-        public Form1()
-        {
             InitializeComponent();
 
             TestButton.Click += new EventHandler(TestButton_Click);
@@ -49,19 +28,24 @@ namespace DOS2DE_SaveEditor
 
         public void TestButton_Click(object sender, EventArgs eventArgs)
         {
-            RunNullSaveTest();
+            _formBindings.RunNullSaveTest();
         }
 
         public void ImportButton_Click(object sender, EventArgs eventArgs)
         {
-            ImportFile(saveGameInputTextBox.Text);
+            SaveGame saveGame = _formBindings.ImportFile(saveGameInputTextBox.Text);
+
+            if (saveGame.LoadedSuccessfully())
+            {
+                saveGameContentsDisplayLabel.Text = saveGame.SaveName;
+                treeView1.Nodes.Add(saveGame.XmlContents);
+            }
         }
 
         public void ExportButton_Click(object sender, EventArgs eventArgs)
         {
-            RunSaveTest(saveGameOutputTextBox.Text);
+            _formBindings.RunSaveTest(saveGameOutputTextBox.Text);
         }
-
 
         private Label saveGameInputLabel;
         private TextBox saveGameInputTextBox;
@@ -71,9 +55,9 @@ namespace DOS2DE_SaveEditor
         private Button ImportButton;
         private Button ExportButton;
         private Label saveGameContentsLabel;
-        private ListBox saveGameContentsListbox;
         private FlowLayoutPanel saveGameContentflowLayout;
         private Label saveGameContentsDisplayLabel;
+        private TreeView treeView1;
         private TextBox saveGameOutputTextBox;
 
         private void InitializeComponent()
@@ -88,7 +72,7 @@ namespace DOS2DE_SaveEditor
             this.saveGameContentflowLayout = new System.Windows.Forms.FlowLayoutPanel();
             this.saveGameContentsLabel = new System.Windows.Forms.Label();
             this.saveGameContentsDisplayLabel = new System.Windows.Forms.Label();
-            this.saveGameContentsListbox = new System.Windows.Forms.ListBox();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.ExportButton = new System.Windows.Forms.Button();
             this.mainFlowLayoutPanel.SuspendLayout();
             this.saveGameContentflowLayout.SuspendLayout();
@@ -116,7 +100,7 @@ namespace DOS2DE_SaveEditor
             // saveGameOutputLabel
             // 
             this.saveGameOutputLabel.AutoSize = true;
-            this.saveGameOutputLabel.Location = new System.Drawing.Point(15, 706);
+            this.saveGameOutputLabel.Location = new System.Drawing.Point(15, 274);
             this.saveGameOutputLabel.Margin = new System.Windows.Forms.Padding(5);
             this.saveGameOutputLabel.Name = "saveGameOutputLabel";
             this.saveGameOutputLabel.Size = new System.Drawing.Size(240, 25);
@@ -125,7 +109,7 @@ namespace DOS2DE_SaveEditor
             // 
             // saveGameOutputTextBox
             // 
-            this.saveGameOutputTextBox.Location = new System.Drawing.Point(15, 741);
+            this.saveGameOutputTextBox.Location = new System.Drawing.Point(15, 309);
             this.saveGameOutputTextBox.Margin = new System.Windows.Forms.Padding(5);
             this.saveGameOutputTextBox.Name = "saveGameOutputTextBox";
             this.saveGameOutputTextBox.Size = new System.Drawing.Size(745, 31);
@@ -133,7 +117,7 @@ namespace DOS2DE_SaveEditor
             // 
             // TestButton
             // 
-            this.TestButton.Location = new System.Drawing.Point(15, 831);
+            this.TestButton.Location = new System.Drawing.Point(15, 399);
             this.TestButton.Margin = new System.Windows.Forms.Padding(5);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(119, 39);
@@ -149,7 +133,7 @@ namespace DOS2DE_SaveEditor
             this.mainFlowLayoutPanel.Controls.Add(this.saveGameInputTextBox);
             this.mainFlowLayoutPanel.Controls.Add(this.ImportButton);
             this.mainFlowLayoutPanel.Controls.Add(this.saveGameContentflowLayout);
-            this.mainFlowLayoutPanel.Controls.Add(this.saveGameContentsListbox);
+            this.mainFlowLayoutPanel.Controls.Add(this.treeView1);
             this.mainFlowLayoutPanel.Controls.Add(this.saveGameOutputLabel);
             this.mainFlowLayoutPanel.Controls.Add(this.saveGameOutputTextBox);
             this.mainFlowLayoutPanel.Controls.Add(this.ExportButton);
@@ -202,19 +186,16 @@ namespace DOS2DE_SaveEditor
             this.saveGameContentsDisplayLabel.TabIndex = 9;
             this.saveGameContentsDisplayLabel.Text = "No save loaded";
             // 
-            // saveGameContentsListbox
+            // treeView1
             // 
-            this.saveGameContentsListbox.FormattingEnabled = true;
-            this.saveGameContentsListbox.ItemHeight = 25;
-            this.saveGameContentsListbox.Location = new System.Drawing.Point(13, 169);
-            this.saveGameContentsListbox.Name = "saveGameContentsListbox";
-            this.saveGameContentsListbox.Size = new System.Drawing.Size(747, 529);
-            this.saveGameContentsListbox.TabIndex = 7;
-            this.saveGameContentsListbox.SelectedIndexChanged += new System.EventHandler(this.saveGameContentsListbox_SelectedIndexChanged);
+            this.treeView1.Location = new System.Drawing.Point(13, 169);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(747, 97);
+            this.treeView1.TabIndex = 11;
             // 
             // ExportButton
             // 
-            this.ExportButton.Location = new System.Drawing.Point(15, 782);
+            this.ExportButton.Location = new System.Drawing.Point(15, 350);
             this.ExportButton.Margin = new System.Windows.Forms.Padding(5);
             this.ExportButton.Name = "ExportButton";
             this.ExportButton.Size = new System.Drawing.Size(119, 39);
@@ -222,13 +203,13 @@ namespace DOS2DE_SaveEditor
             this.ExportButton.Text = "Export";
             this.ExportButton.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(774, 885);
             this.Controls.Add(this.mainFlowLayoutPanel);
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.mainFlowLayoutPanel.ResumeLayout(false);
             this.mainFlowLayoutPanel.PerformLayout();
             this.saveGameContentflowLayout.ResumeLayout(false);

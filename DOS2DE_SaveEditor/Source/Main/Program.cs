@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DOS2DE_SaveEditor.src
+namespace DOS2DE_SaveEditor.Source.Main
 {
     static class Program
     {
@@ -15,7 +15,10 @@ namespace DOS2DE_SaveEditor.src
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            FormBindings formBindings = new FormBindings();
+
+            Application.Run(new MainForm(formBindings));
         }
     }
 }

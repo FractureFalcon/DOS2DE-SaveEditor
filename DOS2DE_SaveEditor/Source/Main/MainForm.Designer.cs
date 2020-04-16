@@ -1,6 +1,6 @@
 ﻿namespace DOS2DE_SaveEditor
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.

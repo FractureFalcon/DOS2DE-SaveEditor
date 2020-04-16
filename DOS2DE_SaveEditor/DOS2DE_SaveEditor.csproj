@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -63,14 +63,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\ExportToolWrapper.cs" />
-    <Compile Include="src\FileUtils.cs" />
-    <Compile Include="src\Form1.cs">
+    <Compile Include="Source\Main\ExportToolWrapper.cs" />
+    <Compile Include="Source\Main\FormBindings.cs" />
+    <Compile Include="Source\Main\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\Form1.Designer.cs" />
-    <Compile Include="src\Program.cs" />
-    <Compile Include="src\SaveGame.cs" />
+    <Compile Include="Source\Main\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Main\Program.cs" />
+    <Compile Include="Source\Main\SaveGame.cs" />
+    <Compile Include="Source\Utils\FileUtils.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -80,9 +83,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="src\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Source\Main\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Libraries\ExportTool-v1.14.1\ConverterApp.exe.config" />
+    <None Include="Libraries\ExportTool-v1.14.1\divine.exe.config" />
+    <None Include="Libraries\ExportTool-v1.14.1\settings.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -92,12 +98,21 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Source\Main\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="lib\" />
+    <Content Include="Libraries\ExportTool-v1.14.1\AlphaFS.dll" />
+    <Content Include="Libraries\ExportTool-v1.14.1\CommandLineArgumentsParser.dll" />
+    <Content Include="Libraries\ExportTool-v1.14.1\ConverterApp.exe" />
+    <Content Include="Libraries\ExportTool-v1.14.1\divine.exe" />
+    <Content Include="Libraries\ExportTool-v1.14.1\granny2.dll" />
+    <Content Include="Libraries\ExportTool-v1.14.1\LSLib.dll" />
+    <Content Include="Libraries\ExportTool-v1.14.1\LSLibNative.dll" />
+    <Content Include="Libraries\ExportTool-v1.14.1\LZ4.dll" />
+    <Content Include="Libraries\ExportTool-v1.14.1\Newtonsoft.Json.dll" />
+    <Content Include="Libraries\ExportTool-v1.14.1\OpenTK.dll" />
+    <Content Include="Libraries\ExportTool-v1.14.1\README_divine_exe.txt" />
+    <Content Include="Libraries\ExportTool-v1.14.1\zlib.net.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -114,7 +129,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>rmdir /s /q "$(TargetDir)\ExportTool-v1.14.1"
-xcopy /I "$(ProjectDir)\lib\ExportTool-v1.14.1" "$(TargetDir)\ExportTool-v1.14.1"</PreBuildEvent>
+xcopy /I "$(ProjectDir)\Libraries\ExportTool-v1.14.1" "$(TargetDir)\ExportTool-v1.14.1"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>

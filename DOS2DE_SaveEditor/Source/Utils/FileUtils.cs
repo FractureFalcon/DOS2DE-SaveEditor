@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOS2DE_SaveEditor.src
+namespace DOS2DE_SaveEditor.Source.Utils
 {
     public static class FileUtils
     {

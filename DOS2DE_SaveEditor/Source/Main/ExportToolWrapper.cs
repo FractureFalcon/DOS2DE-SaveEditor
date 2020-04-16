@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DOS2DE_SaveEditor.Source.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DOS2DE_SaveEditor.src
+namespace DOS2DE_SaveEditor.Source.Main
 {
     public class ExportToolWrapper
     {
