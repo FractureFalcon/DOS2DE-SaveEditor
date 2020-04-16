@@ -33,7 +33,7 @@ namespace DOS2DE_SaveEditor
 
         public void ImportButton_Click(object sender, EventArgs eventArgs)
         {
-            SaveGame saveGame = _formBindings.ImportFile(saveGameInputTextBox.Text);
+            SaveGame saveGame = _formBindings.ImportSaveGameLsv(saveGameInputTextBox.Text);
 
             if (saveGame.LoadedSuccessfully())
             {
@@ -44,7 +44,7 @@ namespace DOS2DE_SaveEditor
 
         public void ExportButton_Click(object sender, EventArgs eventArgs)
         {
-            _formBindings.RunSaveTest(saveGameOutputTextBox.Text);
+            _formBindings.ExportCurrentSaveGame(saveGameOutputTextBox.Text);
         }
 
         private Label saveGameInputLabel;

@@ -16,6 +16,8 @@ namespace DOS2DE_SaveEditor.Source.Utils
                 return false;
             }
 
+            path = path.Replace("\"", string.Empty);
+
             try
             {
                 string extension = Path.GetExtension(path);

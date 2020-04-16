@@ -32,11 +32,24 @@ namespace DOS2DE_SaveEditor.Source.Main
             ExportToolWrapper.CloseSaveGame(test, pathToExport);
         }
 
-        public SaveGame ImportFile(string pathToSaveLsv)
+        public SaveGame ImportSaveGameLsv(string pathToSaveGameLsv)
         {
-            SaveGame saveGame = ExportToolWrapper.OpenSaveGameLSV(pathToSaveLsv);
+            _currentSaveGame = ExportToolWrapper.OpenSaveGameLSV(pathToSaveGameLsv);
 
-            return saveGame;
+            return _currentSaveGame;
+        }
+
+        public void ExportCurrentSaveGame(string outputPath)
+        {
+            ExportSaveGame(_currentSaveGame, outputPath);
+        }
+
+        private void ExportSaveGame(SaveGame saveGame, string outputPath)
+        {
+            if (saveGame.LoadedSuccessfully())
+            {
+                ExportToolWrapper.CloseSaveGame(saveGame, outputPath);
+            }
         }
     }
 }
