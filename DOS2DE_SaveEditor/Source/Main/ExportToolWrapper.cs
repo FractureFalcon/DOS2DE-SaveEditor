@@ -50,23 +50,19 @@ namespace DOS2DE_SaveEditor.Source.Main
             string outputFolder = Path.Combine(WorkspaceFolder, filename);
 
             Console.WriteLine($"[INFO] Extracting {fullFileName} to {outputFolder}...");
+
             string exportToolExtractSaveArgs = $"-s \"{fullFileName}\" -d \"{outputFolder}\" -a extract-package";
             string exportToolDecompressContentsArgs = $"-s \"{outputFolder}\" -d \"{outputFolder}\" -a convert-resources -i lsf -o lsx";
 
             string exportToolExtractSaveCommand = $".\\{ExportTool} {exportToolExtractSaveArgs}";
             string exportToolDecompressContentsCommand = $".\\{ExportTool} {exportToolDecompressContentsArgs}";
-            Console.WriteLine($"[DEBUG] Using args {exportToolExtractSaveCommand}");
 
-            ExecuteCommandArgs commandArgs = new ExecuteCommandArgs
-            {
-                Commands = new List<string> {
-                    exportToolExtractSaveCommand, 
+            ExecuteCommandsAsyncArgs commandArgs = new ExecuteCommandsAsyncArgs(new List<string> {
+                    exportToolExtractSaveCommand,
                     exportToolDecompressContentsCommand
-                }
-            };
+                }, null);
 
-            Process cmd = ProcessWrapper.ExecuteCommand(commandArgs);
-            Console.WriteLine($"[DEBUG] Console output:\n{cmd.StandardOutput.ReadToEnd()}");
+            Process cmd = ProcessWrapper.ExecuteCommands(commandArgs);
 
             return new SaveGame(outputFolder, Path.GetFileNameWithoutExtension(outputFolder));
         }
@@ -86,6 +82,7 @@ namespace DOS2DE_SaveEditor.Source.Main
                 return;
             }
 
+            string duplicateSaveFolder = $"{saveGame.WorkspaceFolderLocation}_TEMP";
             string outputFilePath = FileUtils.UseDefaultPathIfNotRooted(outputLocation, WorkspaceFolder);
 
             if (!FileUtils.IsLsv(outputLocation))
@@ -95,26 +92,25 @@ namespace DOS2DE_SaveEditor.Source.Main
             }
 
             Console.WriteLine($"[INFO] Compressing {saveFolder} to {outputFilePath}...");
-            string exportToolCompressContentsArgs = $"-s \"{saveFolder}\" -d \"{saveFolder}\" -a convert-resources -i lsx -o lsf";
-            string exportToolCreateSaveLsvArgs = $"-s \"{saveFolder}\" -a create-package -d \"{outputFilePath}\"";
+
+            string duplicateSaveFolderCommand = $"xcopy /s /i \"{saveFolder}\" \"{duplicateSaveFolder}\"";
+
+            string exportToolCompressContentsArgs = $"-s \"{duplicateSaveFolder}\" -d \"{duplicateSaveFolder}\" -a convert-resources -i lsx -o lsf";
+            string exportToolCreateSaveLsvArgs = $"-s \"{duplicateSaveFolder}\" -d \"{outputFilePath}\" -a create-package";
 
             string exportToolCompressContentsCommand = $".\\{ExportTool} {exportToolCompressContentsArgs}";
-            string saveFolderGlob = Path.Combine(saveFolder, "*.lsx");
-            string wipeLsxFilesCommand = $"del /s /q {saveFolderGlob}";
+            string lsxFilesGlob = Path.Combine(duplicateSaveFolder, "*.lsx");
+            string wipeLsxFilesCommand = $"del /s /q \"{lsxFilesGlob}\"";
             string exportToolCreateSaveLsvCommand = $".\\{ExportTool} {exportToolCreateSaveLsvArgs}";
-            Console.WriteLine($"[DEBUG] Using args {exportToolCompressContentsCommand}");
 
-            ExecuteCommandArgs commandArgs = new ExecuteCommandArgs
-            {
-                Commands = new List<string> { 
+            ExecuteCommandsAsyncArgs commandArgs = new ExecuteCommandsAsyncArgs(new List<string> {
+                    duplicateSaveFolderCommand,
                     exportToolCompressContentsCommand,
                     wipeLsxFilesCommand,
                     exportToolCreateSaveLsvCommand
-                }
-            };
+                }, null);
 
-            Process cmd = ProcessWrapper.ExecuteCommand(commandArgs);
-            Console.WriteLine($"[DEBUG] Console output:\n{cmd.StandardOutput.ReadToEnd()}");
+            ProcessWrapper.ExecuteCommands(commandArgs);
         }
     }
 }
